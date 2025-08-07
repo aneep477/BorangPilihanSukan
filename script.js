@@ -1,5 +1,5 @@
 // ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT URL HERE ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZ_7PGOMTv6zWWqqw4O7Dj0khTfL1j4qiQerjl91HscbJwX3NIPt7IxLa3T7luZDl1/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw7G4wx8i8lj2mP0Vx2PVqloSIvbr9jiSSfMZHmDBgPP_tbteZQNH3y7UEeFwRk5nrt/exec"; 
 
 // DOM Element References
 const loginSection = document.getElementById('login-section');
@@ -124,3 +124,4 @@ selectionForm.addEventListener('submit', async (e) => {
         setLoadingState(submitButton, false, "Hantar Pilihan");
     }
 });
+
