@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borang Pilihan Permainan MPU3421</title>
+    <title>Borang Pilihan Sukan</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Pendaftaran MPU3421 Permainan Sem I 2025/26</h1>
+        <h1>Pendaftaran Sukan Pelajar</h1>
 
+        <div id="quota-table-container">
+            <h2>Status Kuota Semasa</h2>
+            <p>Memuat turun data terkini...</p> 
+        </div>
+        
         <div id="login-section">
             <h2>Langkah 1: Pengesahan Diri</h2>
             <form id="login-form">
@@ -25,10 +30,10 @@
             <form id="selection-form">
                 <label for="pilihan1">Pilihan 1 (Utama):</label>
                 <select id="pilihan1" name="pilihan1" required></select>
-
+                
                 <label for="pilihan2">Pilihan 2:</label>
                 <select id="pilihan2" name="pilihan2" required></select>
-
+                
                 <button type="submit" id="submit-button">Hantar Pilihan</button>
             </form>
         </div>
@@ -39,5 +44,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
