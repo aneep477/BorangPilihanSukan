@@ -1,5 +1,5 @@
 // ▼▼▼ GANTIKAN DENGAN URL APPS SCRIPT BARU ANDA SELEPAS DEPLOY SEMULA ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGoZAKp6fGWtnQm7Juo1NcXbEAV3AsACtyhSTeeq_JnfNKlHYmyPnLXh-rKe6IL5RG/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWlA-kP-7pB_5dYkRz-Q9j8nF_gH3pL1kMvXcD8wS7oN4rT5yZ9vXcH_kL/exec"; 
 
 document.addEventListener('DOMContentLoaded', () => {
     loadInitialData();
@@ -150,3 +150,4 @@ function setLoadingState(button, isLoading, originalText) {
     button.disabled = isLoading;
     button.textContent = isLoading ? "Sila tunggu..." : originalText;
 }
+
