@@ -1,7 +1,7 @@
-// ▼▼▼ TAMPAL URL GOOGLE APPS SCRIPT ANDA DI SINI ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYc2lYwqIUlHllpcEDuEpl058cSjKKJCnm4OjK5kYZSjgFq-CdyZfLpdVhvVbjJAQF/exec" 
+// ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT URL HERE ▼▼▼
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZ_7PGOMTv6zWWqqw4O7Dj0khTfL1j4qiQerjl91HscbJwX3NIPt7IxLa3T7luZDl1/exec"; 
 
-// Rujukan kepada elemen-elemen di laman web
+// DOM Element References
 const loginSection = document.getElementById('login-section');
 const selectionSection = document.getElementById('selection-section');
 const loginForm = document.getElementById('login-form');
@@ -13,20 +13,19 @@ const icInput = document.getElementById('kad-pengenalan');
 const loginButton = document.getElementById('login-button');
 const submitButton = document.getElementById('submit-button');
 
-
-// Fungsi untuk memaparkan maklum balas (mesej ralat atau kejayaan)
+// Function to display feedback messages
 function showFeedback(message, type) {
     feedbackMessage.textContent = message;
-    feedbackMessage.className = type; // 'success' atau 'error'
+    feedbackMessage.className = type; // 'success' or 'error'
 }
 
-// Fungsi untuk melumpuhkan butang semasa proses sedang berjalan
-function setLoadingState(button, isLoading, text) {
+// Function to manage button loading state
+function setLoadingState(button, isLoading, originalText) {
     button.disabled = isLoading;
-    button.textContent = isLoading ? "Sila tunggu..." : text;
+    button.textContent = isLoading ? "Sila tunggu..." : originalText;
 }
 
-// 1. Apabila borang pengesahan KP dihantar
+// 1. Handle the initial IC verification form
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const kp = icInput.value.trim();
@@ -41,15 +40,14 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: "verify", kadPengenalan: kp })
         });
+        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
         const result = await response.json();
 
-        if (result.status === "error") { throw new Error(result.message); }
+        if (result.status === "error") throw new Error(result.message);
         
-        // Jika berjaya, teruskan untuk memuatkan senarai sukan
+        // If verification is successful, load sports options
         await loadSportsOptions();
         
         loginSection.classList.add('hidden');
@@ -65,9 +63,10 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Fungsi untuk mendapatkan senarai sukan yang masih available dari Apps Script
+// Function to fetch available sports list from the backend
 async function loadSportsOptions() {
-    const response = await fetch(WEB_APP_URL); // Guna GET request
+    const response = await fetch(WEB_APP_URL); // Simple GET request
+    if (!response.ok) throw new Error('Gagal memuatkan senarai sukan.');
     const result = await response.json();
 
     if (result.status === 'success') {
@@ -87,7 +86,7 @@ async function loadSportsOptions() {
     }
 }
 
-// 2. Apabila borang pilihan sukan dihantar
+// 2. Handle the final sports selection form submission
 selectionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const pilihan1 = document.getElementById('pilihan1').value;
@@ -109,10 +108,9 @@ selectionForm.addEventListener('submit', async (e) => {
     try {
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
-            mode: 'cors',
-            body: JSON.stringify({ kadPengenalan: kp, pilihan1: pilihan1, pilihan2: pilihan2 }),
-            headers: { 'Content-Type': 'application/json' }
+            body: JSON.stringify({ kadPengenalan: kp, pilihan1: pilihan1, pilihan2: pilihan2 })
         });
+        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
         const result = await response.json();
         
         if (result.status === 'success') {
@@ -126,5 +124,3 @@ selectionForm.addEventListener('submit', async (e) => {
         setLoadingState(submitButton, false, "Hantar Pilihan");
     }
 });
-
-
