@@ -1,39 +1,91 @@
-// ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT URL HERE ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwwwZ9hslFffmvysAODAQ-HqwAo7rVzkssBg75XfWjo3CxXVbiWR0rYAUah8UzcmEPY/exec"; 
+// ▼▼▼ GANTIKAN DENGAN URL APPS SCRIPT BARU ANDA SELEPAS DEPLOY SEMULA ▼▼▼
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxU8GhItMvK5c_wCpt8-3Cc2dty2UPfF8Tu-PD8d_ad2Vtl-Flh_gIZgi72WjRdizis/exec"; 
 
-// DOM Element References
-const loginSection = document.getElementById('login-section');
-const selectionSection = document.getElementById('selection-section');
+// Jalankan kod ini selepas semua elemen HTML siap dimuatkan
+document.addEventListener('DOMContentLoaded', () => {
+    loadInitialData();
+});
+
+// Fungsi utama untuk memuatkan data awal (jadual kuota & dropdown)
+async function loadInitialData() {
+    try {
+        const response = await fetch(WEB_APP_URL);
+        if (!response.ok) throw new Error('Gagal menyambung ke server.');
+        
+        const result = await response.json();
+        if (result.status === 'error') throw new Error(result.message);
+        
+        const sportsData = result.data;
+        displayQuotaTable(sportsData); // Panggil fungsi untuk papar jadual
+        populateDropdowns(sportsData); // Panggil fungsi untuk isi dropdown
+        
+    } catch (error) {
+        document.getElementById('quota-table-container').innerHTML = `<p style="color: red;">Gagal memuatkan data kuota: ${error.message}</p>`;
+    }
+}
+
+// Fungsi untuk membina dan memaparkan jadual kuota
+function displayQuotaTable(data) {
+    const container = document.getElementById('quota-table-container');
+    let tableHTML = `
+        <h2>Status Kuota Semasa</h2>
+        <table class="quota-table">
+            <thead>
+                <tr>
+                    <th>Sukan</th>
+                    <th>Sudah Daftar</th>
+                    <th>Baki Kuota</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    if (data.length === 0) {
+        tableHTML += `<tr><td colspan="3">Tiada data pendaftaran buat masa ini.</td></tr>`;
+    } else {
+        data.forEach(sport => {
+            const statusClass = sport.remaining > 0 ? 'available' : 'full';
+            tableHTML += `
+                <tr class="${statusClass}">
+                    <td>${sport.name}</td>
+                    <td>${sport.registered} / ${sport.quota}</td>
+                    <td>${sport.remaining}</td>
+                </tr>`;
+        });
+    }
+
+    tableHTML += `</tbody></table>`;
+    container.innerHTML = tableHTML;
+}
+
+// Fungsi untuk mengisi dropdown hanya dengan sukan yang masih ada kekosongan
+function populateDropdowns(data) {
+    const selectPilihan1 = document.getElementById('pilihan1');
+    const selectPilihan2 = document.getElementById('pilihan2');
+    
+    selectPilihan1.innerHTML = '<option value="">-- Pilih Sukan --</option>';
+    selectPilihan2.innerHTML = '<option value="">-- Pilih Sukan --</option>';
+
+    data.forEach(sport => {
+        if (sport.remaining > 0) {
+            const option = `<option value="${sport.name}">${sport.name}</option>`;
+            selectPilihan1.innerHTML += option;
+            selectPilihan2.innerHTML += option;
+        }
+    });
+}
+
+// --- KOD UNTUK LOG MASUK DAN PENDAFTARAN ---
+
 const loginForm = document.getElementById('login-form');
-const selectionForm = document.getElementById('selection-form');
-const feedbackMessage = document.getElementById('feedback-message');
-const studentNameEl = document.getElementById('student-name');
-const studentClassEl = document.getElementById('student-class');
-const icInput = document.getElementById('kad-pengenalan');
-const loginButton = document.getElementById('login-button');
-const submitButton = document.getElementById('submit-button');
-
-// Function to display feedback messages
-function showFeedback(message, type) {
-    feedbackMessage.textContent = message;
-    feedbackMessage.className = type; // 'success' or 'error'
-}
-
-// Function to manage button loading state
-function setLoadingState(button, isLoading, originalText) {
-    button.disabled = isLoading;
-    button.textContent = isLoading ? "Sila tunggu..." : originalText;
-}
-
-// 1. Handle the initial IC verification form
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const kp = icInput.value.trim();
+    const kp = document.getElementById('kad-pengenalan').value.trim();
     if (!kp) {
         showFeedback("Sila masukkan kad pengenalan.", "error");
         return;
     }
     
+    const loginButton = document.getElementById('login-button');
     setLoadingState(loginButton, true, "Sahkan");
     showFeedback("Mengesahkan...", "");
 
@@ -44,16 +96,13 @@ loginForm.addEventListener('submit', async (e) => {
         });
         if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
         const result = await response.json();
-
         if (result.status === "error") throw new Error(result.message);
         
-        // If verification is successful, load sports options
-        await loadSportsOptions();
-        
-        loginSection.classList.add('hidden');
-        selectionSection.classList.remove('hidden');
-        studentNameEl.textContent = result.studentInfo.nama;
-        studentClassEl.textContent = result.studentInfo.kelas;
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('quota-table-container').classList.add('hidden'); // Sembunyikan jadual selepas log masuk
+        document.getElementById('selection-section').classList.remove('hidden');
+        document.getElementById('student-name').textContent = result.studentInfo.nama;
+        document.getElementById('student-class').textContent = result.studentInfo.kelas;
         showFeedback('', '');
 
     } catch (error) {
@@ -63,45 +112,17 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Function to fetch available sports list from the backend
-async function loadSportsOptions() {
-    const response = await fetch(WEB_APP_URL); // Simple GET request
-    if (!response.ok) throw new Error('Gagal memuatkan senarai sukan.');
-    const result = await response.json();
-
-    if (result.status === 'success') {
-        const availableSports = result.data;
-        const selectPilihan1 = document.getElementById('pilihan1');
-        const selectPilihan2 = document.getElementById('pilihan2');
-        
-        selectPilihan1.innerHTML = '<option value="">-- Pilih Sukan --</option>';
-        selectPilihan2.innerHTML = '<option value="">-- Pilih Sukan --</option>';
-
-        availableSports.forEach(sukan => {
-            selectPilihan1.innerHTML += `<option value="${sukan}">${sukan}</option>`;
-            selectPilihan2.innerHTML += `<option value="${sukan}">${sukan}</option>`;
-        });
-    } else {
-        throw new Error(result.message || 'Gagal memuatkan senarai sukan.');
-    }
-}
-
-// 2. Handle the final sports selection form submission
+const selectionForm = document.getElementById('selection-form');
 selectionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const pilihan1 = document.getElementById('pilihan1').value;
     const pilihan2 = document.getElementById('pilihan2').value;
-    const kp = icInput.value;
+    const kp = document.getElementById('kad-pengenalan').value;
 
-    if (!pilihan1 || !pilihan2) {
-        showFeedback('Sila pilih kedua-dua pilihan sukan.', 'error');
-        return;
-    }
-    if (pilihan1 === pilihan2) {
-        showFeedback('Pilihan 1 dan Pilihan 2 tidak boleh sama.', 'error');
-        return;
-    }
+    if (!pilihan1 || !pilihan2) { showFeedback('Sila pilih kedua-dua pilihan sukan.', 'error'); return; }
+    if (pilihan1 === pilihan2) { showFeedback('Pilihan 1 dan Pilihan 2 tidak boleh sama.', 'error'); return; }
 
+    const submitButton = document.getElementById('submit-button');
     setLoadingState(submitButton, true, "Hantar Pilihan");
     showFeedback("Menghantar pilihan...", "");
     
@@ -114,7 +135,7 @@ selectionForm.addEventListener('submit', async (e) => {
         const result = await response.json();
         
         if (result.status === 'success') {
-            selectionSection.innerHTML = `<h2>Terima Kasih, ${result.studentInfo.nama}!</h2>`;
+            document.getElementById('selection-section').innerHTML = `<h2>Terima Kasih, ${result.studentInfo.nama}!</h2><p>Pilihan anda telah direkodkan.</p>`;
             showFeedback(result.message, 'success');
         } else {
             throw new Error(result.message);
@@ -125,5 +146,13 @@ selectionForm.addEventListener('submit', async (e) => {
     }
 });
 
+function showFeedback(message, type) {
+    const feedbackMessage = document.getElementById('feedback-message');
+    feedbackMessage.textContent = message;
+    feedbackMessage.className = type;
+}
 
-
+function setLoadingState(button, isLoading, originalText) {
+    button.disabled = isLoading;
+    button.textContent = isLoading ? "Sila tunggu..." : originalText;
+}
