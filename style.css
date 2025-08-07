@@ -3,7 +3,7 @@ body {
     background-color: #f4f4f9; 
     display: flex; 
     justify-content: center; 
-    align-items: flex-start; /* Ubah ke flex-start untuk paparan dari atas */
+    align-items: flex-start;
     min-height: 100vh; 
     margin: 0;
     padding: 2rem;
@@ -13,7 +13,7 @@ body {
     background: white; 
     padding: 2rem; 
     border-radius: 8px; 
-    box-shadow: 0 4px_12px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
     width: 100%; 
     max-width: 600px; 
 }
@@ -72,8 +72,6 @@ button:disabled {
 .error { 
     background-color: #f8d7da; color: #721c24; 
 }
-
-/* Style untuk Jadual Kuota */
 #quota-table-container {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -95,7 +93,7 @@ button:disabled {
     font-weight: 600;
 }
 .quota-table tr.full {
-    background-color: #f8d7da; /* Warna merah untuk sukan yang penuh */
+    background-color: #f8d7da;
     color: #721c24;
-    text-decoration: line-through; /* Gariskan teks untuk sukan penuh */
+    text-decoration: line-through;
 }
