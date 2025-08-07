@@ -1,5 +1,5 @@
 // ▼▼▼ TAMPAL URL GOOGLE APPS SCRIPT ANDA DI SINI ▼▼▼
-const WEB_APP_URL = "URL_APPS_SCRIPT_ANDA_DI_SINI"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYc2lYwqIUlHllpcEDuEpl058cSjKKJCnm4OjK5kYZSjgFq-CdyZfLpdVhvVbjJAQF/exec"; 
 
 // Rujukan kepada elemen-elemen di laman web
 const loginSection = document.getElementById('login-section');
@@ -126,3 +126,4 @@ selectionForm.addEventListener('submit', async (e) => {
         setLoadingState(submitButton, false, "Hantar Pilihan");
     }
 });
+
