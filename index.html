@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borang Pilihan Sukan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pendaftaran Sukan Pelajar</h1>
+
+        <div id="login-section">
+            <h2>Langkah 1: Pengesahan Diri</h2>
+            <form id="login-form">
+                <label for="kad-pengenalan">Masukkan Nombor Kad Pengenalan (tanpa sengkang '-'):</label>
+                <input type="text" id="kad-pengenalan" name="kad-pengenalan" required autocomplete="off">
+                <button type="submit" id="login-button">Sahkan</button>
+            </form>
+        </div>
+
+        <div id="selection-section" class="hidden">
+            <h2>Langkah 2: Buat Pilihan Anda</h2>
+            <p>Selamat datang, <strong id="student-name"></strong> dari kelas <strong id="student-class"></strong>!</p>
+            <form id="selection-form">
+                <label for="pilihan1">Pilihan 1 (Utama):</label>
+                <select id="pilihan1" name="pilihan1" required></select>
+
+                <label for="pilihan2">Pilihan 2:</label>
+                <select id="pilihan2" name="pilihan2" required></select>
+
+                <button type="submit" id="submit-button">Hantar Pilihan</button>
+            </form>
+        </div>
+
+        <div id="feedback-message"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
