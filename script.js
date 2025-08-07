@@ -1,5 +1,5 @@
 // ▼▼▼ GANTIKAN DENGAN URL APPS SCRIPT BARU ANDA SELEPAS DEPLOY SEMULA ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF3nvCET11JEQVcPuWo5H146oASE0Fpb81nFnasxs_PIDwA4-jz2JmjKyBaZPbBfwj/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGoZAKp6fGWtnQm7Juo1NcXbEAV3AsACtyhSTeeq_JnfNKlHYmyPnLXh-rKe6IL5RG/exec"; 
 
 document.addEventListener('DOMContentLoaded', () => {
     loadInitialData();
