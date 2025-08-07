@@ -1,12 +1,10 @@
 // ▼▼▼ GANTIKAN DENGAN URL APPS SCRIPT BARU ANDA SELEPAS DEPLOY SEMULA ▼▼▼
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxU8GhItMvK5c_wCpt8-3Cc2dty2UPfF8Tu-PD8d_ad2Vtl-Flh_gIZgi72WjRdizis/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF3nvCET11JEQVcPuWo5H146oASE0Fpb81nFnasxs_PIDwA4-jz2JmjKyBaZPbBfwj/exec"; 
 
-// Jalankan kod ini selepas semua elemen HTML siap dimuatkan
 document.addEventListener('DOMContentLoaded', () => {
     loadInitialData();
 });
 
-// Fungsi utama untuk memuatkan data awal (jadual kuota & dropdown)
 async function loadInitialData() {
     try {
         const response = await fetch(WEB_APP_URL);
@@ -16,15 +14,14 @@ async function loadInitialData() {
         if (result.status === 'error') throw new Error(result.message);
         
         const sportsData = result.data;
-        displayQuotaTable(sportsData); // Panggil fungsi untuk papar jadual
-        populateDropdowns(sportsData); // Panggil fungsi untuk isi dropdown
+        displayQuotaTable(sportsData);
+        populateDropdowns(sportsData);
         
     } catch (error) {
         document.getElementById('quota-table-container').innerHTML = `<p style="color: red;">Gagal memuatkan data kuota: ${error.message}</p>`;
     }
 }
 
-// Fungsi untuk membina dan memaparkan jadual kuota
 function displayQuotaTable(data) {
     const container = document.getElementById('quota-table-container');
     let tableHTML = `
@@ -57,7 +54,6 @@ function displayQuotaTable(data) {
     container.innerHTML = tableHTML;
 }
 
-// Fungsi untuk mengisi dropdown hanya dengan sukan yang masih ada kekosongan
 function populateDropdowns(data) {
     const selectPilihan1 = document.getElementById('pilihan1');
     const selectPilihan2 = document.getElementById('pilihan2');
@@ -73,8 +69,6 @@ function populateDropdowns(data) {
         }
     });
 }
-
-// --- KOD UNTUK LOG MASUK DAN PENDAFTARAN ---
 
 const loginForm = document.getElementById('login-form');
 loginForm.addEventListener('submit', async (e) => {
@@ -99,7 +93,7 @@ loginForm.addEventListener('submit', async (e) => {
         if (result.status === "error") throw new Error(result.message);
         
         document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('quota-table-container').classList.add('hidden'); // Sembunyikan jadual selepas log masuk
+        document.getElementById('quota-table-container').classList.add('hidden');
         document.getElementById('selection-section').classList.remove('hidden');
         document.getElementById('student-name').textContent = result.studentInfo.nama;
         document.getElementById('student-class').textContent = result.studentInfo.kelas;
